@@ -1,10 +1,16 @@
-
 var express = require('express');
 var router = express.Router();
 var models = require('../models')
 var User = models.User;
 var Page = models.Page;
 
+router.get('/',function(req,res,next){
+    User.findAll()
+    .then((users) => {
+        res.render('allusers',{users})
+    });
+
+})
 
 router.get('/:id',function(req,res,next){
     var userPromise = User.findById(req.params.id);

@@ -8,7 +8,7 @@ var Page = models.Page;
 routes.use('/wiki', wikiRouter);
 
 
-routes.use('/user', userRouter);
+routes.use('/users', userRouter);
 
 
 routes.get('/', function (req, res) {
