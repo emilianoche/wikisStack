@@ -7,11 +7,14 @@ var path = require('path');
 var env = nunjucks.configure('views', {noCache: true});
 var models = require('./models')
 
+app.use(bodyParser.urlencoded({ extended: true }))
 
+app.use(bodyParser.json());
 
 app.use('/', routes);
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json());
+
 app.set('view engine', 'html');
 app.engine('html', nunjucks.render);
 
