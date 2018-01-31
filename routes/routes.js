@@ -8,6 +8,9 @@ var Page = models.Page;
 routes.use('/wiki', wikiRouter);
 
 
+routes.use('/user', userRouter);
+
+
 routes.get('/', function (req, res) {
     Page.findAll()
         .then(function (pages) {

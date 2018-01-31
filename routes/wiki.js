@@ -17,28 +17,41 @@ router.get('/:urlTitle', function (req, res, next) {
   Page.findOne({ 
     where: { 
       urlTitle: req.params.urlTitle 
-    } 
+    } ,
+    include: [
+        {model: User, as: 'author'}
+    ]
   })
   .then(function(page){
+    console.log(page)
     res.render('wikipage', {page: page});
   })
   .catch(next);
 });
 
 router.post('/add', function (req, res, next) {
-  // agregá definiciones para  `title` y `content`
-  var page = Page.build({
-    title: req.body.title,
-    content: req.body.content,
-    status: req.body.status
-  });
-  // Asegurate que solo redirigimos **luego** que nuestro save esta completo!
-  // nota:  `.save` devuelve una promesa o puede tomar un callback.
-  page.save()
-    .then(function (savedPage) {
-      res.redirect(savedPage.urlTitle)
-    })
-  // -> después del save -> res.redirect('/');
+
+  User.findOrCreate({
+    where: {
+      name: req.body.name,
+      email: req.body.email
+    }
+  })
+  .then(function (values) {
+    var user = values[0];
+    var page = Page.build({
+      title: req.body.title,
+      content: req.body.content,
+      status: req.body.status
+    });
+    return page.save().then(function (page) {
+      return page.setAuthor(user);
+    });
+  })
+  .then(function (page) {
+    res.redirect(page.urlTitle);
+  })
+  .catch(next);
 });
 
 module.exports = router

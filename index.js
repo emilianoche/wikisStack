@@ -6,6 +6,7 @@ var nunjucks = require('nunjucks');
 var path = require('path');
 var env = nunjucks.configure('views', {noCache: true});
 var models = require('./models')
+var db = models.db
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -18,10 +19,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'html');
 app.engine('html', nunjucks.render);
 
-models.User.sync({})
-.then(function () {
-    return models.Page.sync({})
-}).then(function(){
+db.sync( )
+.then(function(){
     app.listen(3000)
 
 })
